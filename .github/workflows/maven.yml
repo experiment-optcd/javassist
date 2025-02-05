@@ -8,20 +8,21 @@ jobs:
     strategy:
       matrix:
         os:
-        - ubuntu-latest
+          - ubuntu-latest
         java-version:
-        - 11.0.3
-        - 11
+          - 11.0.3
+          - 11
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK ${{ matrix.java-version }}
-      uses: actions/setup-java@v2
-      with:
-        java-version: ${{ matrix.java-version }}
-        distribution: zulu
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      - uses: actions/checkout@v2
+      - name: Set up JDK ${{ matrix.java-version }}
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{ matrix.java-version }}
+          distribution: zulu
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml "-Dmaven.surefire.skipTests=false" "-Dmaven.surefire.reportsDirectory=target/surefire-reports"
+          "-Dmaven.surefire.forkMode=once"
     name: build (${{ matrix.os }}, ${{ matrix.java-version }})
 'on':
-- push
-- workflow_dispatch
+  - push
+  - workflow_dispatch
